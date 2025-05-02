@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html ng-app="portfolioApp" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Portfolio</title>
+  <style>
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f7f8;
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #007acc;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: #ffd54f;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 6px;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    footer {
+      background: #007acc;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      color: #007acc;
+    }
+
+    /* Home */
+    .home-intro {
+      text-align: center;
+    }
+
+    .home-intro img {
+      width: 150px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      border: 4px solid #007acc;
+    }
+
+    .home-intro p {
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Projects */
+    .project-filter {
+      margin-bottom: 1rem;
+    }
+
+    .project-filter label {
+      margin-right: 10px;
+      font-weight: 600;
+    }
+
+    .project-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+      gap: 1rem;
+    }
+
+    .project-card {
+      background: #e3f2fd;
+      border-radius: 6px;
+      padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .project-card h3 {
+      margin-bottom: 0.5rem;
+      color: #01579b;
+    }
+
+    .project-card p {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-card a {
+      color: #007acc;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .project-card a:hover {
+      text-decoration: underline;
+    }
+
+    /* Resume */
+    .resume-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .resume-section h3 {
+      color: #007acc;
+      margin-bottom: 0.5rem;
+    }
+
+    .resume-section ul {
+      list-style-type: disc;
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .expandable {
+      cursor: pointer;
+      user-select: none;
+      color: #007acc;
+    }
+
+    .expandable:hover {
+      text-decoration: underline;
+    }
+
+    /* Contact */
+    .contact-form {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .contact-form label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+      resize: vertical;
+    }
+
+    .contact-form button {
+      background: #007acc;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .contact-form button:hover {
+      background: #005fa3;
+    }
+
+    .success-message {
+      color: green;
+      font-weight: 600;
+      margin-top: 1rem;
+      text-align: center;
+    }
+  </style>
+  <!-- AngularJS CDN -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+  <!-- Angular UI Router CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.29/angular-ui-router.min.js"></script>
+</head>
+<body>
+
+  <header>
+    <h1>Student Portfolio</h1>
+    <nav>
+      <a ui-sref="home" ui-sref-active="active">Home</a>
+      <a ui-sref="projects" ui-sref-active="active">Projects</a>
+      <a ui-sref="resume" ui-sref-active="active">Resume</a>
+      <a ui-sref="contact" ui-sref-active="active">Contact</a>
+    </nav>
+  </header>
+
+  <main ui-view></main>
+
+  <footer>
+    <p>© 2025 Student Portfolio. All rights reserved.</p>
+  </footer>
+
+  <script>
+    (function() {
+      'use strict';
+
+      angular.module('portfolioApp', ['ui.router'])
+        .config(function($stateProvider, $urlRouterProvider) {
+          $urlRouterProvider.otherwise('/home');
+
+          $stateProvider
+            .state('home', {
+              url: '/home',
+              template: '<section class="home-intro">' +
+                          '<img src="profile.jpeg" alt="Profile Picture" />' +
+                          '<h2>Welcome to My Portfolio</h2>' +
+                          '<p>Hi! I\'m a passionate student eager to learn and build amazing projects. Explore my work, resume, and feel free to get in touch.</p>' +
+                        '</section>'
+            })
+            .state('projects', {
+              url: '/projects',
+              controller: 'ProjectsController as projCtrl',
+              template: 
+                '<h2>Projects</h2>' +
+                '<div class="project-filter">' +
+                  '<label>Filter by skill:</label>' +
+                  '<select ng-model="projCtrl.selectedSkill" ng-options="skill for skill in projCtrl.skills">' +
+                    '<option value="">-- All --</option>' +
+                  '</select>' +
+                '</div>' +
+                '<div class="project-list">' +
+                  '<div class="project-card" ng-repeat="project in projCtrl.projects | filter:projCtrl.skillFilter">' +
+                    '<h3>{{project.title}}</h3>' +
+                    '<p><strong>Description:</strong> {{project.description}}</p>' +
+                    '<p><strong>Skills:</strong> {{project.skills.join(\', \')}}</p>' +
+                    '<a ng-if="project.link" href="{{project.link}}" target="_blank">View Project</a>' +
+                  '</div>' +
+                '</div>'
+            })
+            .state('resume', {
+              url: '/resume',
+              controller: 'ResumeController as resumeCtrl',
+              template: 
+                '<h2>Resume</h2>' +
+                '<div class="resume-section" ng-repeat="section in resumeCtrl.resumeSections">' +
+                  '<h3 ng-click="resumeCtrl.toggleSection(section)" class="expandable">' +
+                    '{{section.title}} <span ng-if="!section.expanded">[+]</span><span ng-if="section.expanded">[-]</span>' +
+                  '</h3>' +
+                  '<ul ng-if="section.expanded">' +
+                    '<li ng-repeat="item in section.items">{{item}}</li>' +
+                  '</ul>' +
+                '</div>' +
+                '<button ng-click="resumeCtrl.downloadPDF()">Download PDF</button>'
+            })
+            .state('contact', {
+              url: '/contact',
+              controller: 'ContactController as contactCtrl',
+              template: 
+                '<h2>Contact Me</h2>' +
+                '<form name="contactForm" ng-submit="contactCtrl.submitForm()" novalidate class="contact-form">' +
+                  '<label for="name">Name:</label>' +
+                  '<input type="text" id="name" ng-model="contactCtrl.formData.name" required />' +
+                  '<div ng-show="contactForm.name.$touched && contactForm.name.$invalid" style="color:red;">Name is required.</div>' +
+                  '<label for="email">Email:</label>' +
+                  '<input type="email" id="email" ng-model="contactCtrl.formData.email" required />' +
+                  '<div ng-show="contactForm.email.$touched && contactForm.email.$invalid" style="color:red;">Valid email is required.</div>' +
+                  '<label for="message">Message:</label>' +
+                  '<textarea id="message" ng-model="contactCtrl.formData.message" rows="5" required></textarea>' +
+                  '<div ng-show="contactForm.message.$touched && contactForm.message.$invalid" style="color:red;">Message is required.</div>' +
+                  '<button type="submit" ng-disabled="contactForm.$invalid">Send</button>' +
+                '</form>' +
+                '<p class="success-message" ng-if="contactCtrl.successMessage">{{contactCtrl.successMessage}}</p>'
+            });
+        })
+
+        // Projects Controller
+        .controller('ProjectsController', function() {
+          var vm = this;
+
+          vm.projects = [
+            {
+              title: 'Personal Website',
+              description: 'A responsive personal website built with HTML, CSS, and JavaScript.',
+              skills: ['HTML', 'CSS', 'JavaScript'],
+              link: 'https://example.com/personal-website'
+            },
+            {
+              title: 'AngularJS Portfolio',
+              description: 'A single-page application portfolio using AngularJS and UI-Router.',
+              skills: ['AngularJS', 'JavaScript', 'HTML', 'CSS'],
+              link: 'https://github.com/username/angular-portfolio'
+            },
+            {
+              title: 'Data Visualization',
+              description: 'Interactive charts and graphs using D3.js.',
+              skills: ['JavaScript', 'D3.js', 'SVG'],
+              link: ''
+            },
+            {
+              title: 'Machine Learning Project',
+              description: 'Implemented a classification algorithm using Python and scikit-learn.',
+              skills: ['Python', 'Machine Learning', 'scikit-learn'],
+              link: ''
+            }
+          ];
+
+          // Extract unique skills for filter dropdown
+          vm.skills = [];
+          vm.projects.forEach(function(proj) {
+            proj.skills.forEach(function(skill) {
+              if (vm.skills.indexOf(skill) === -1) {
+                vm.skills.push(skill);
+              }
+            });
+          });
+          vm.skills.sort();
+
+          vm.selectedSkill = '';
+
+          vm.skillFilter = function(project) {
+            if (!vm.selectedSkill) return true;
+            return project.skills.indexOf(vm.selectedSkill) !== -1;
+          };
+        })
+
+        // Resume Controller
+        .controller('ResumeController', function() {
+          var vm = this;
+
+          vm.resumeSections = [
+            {
+              title: 'Education',
+              expanded: true,
+              items: [
+                'CSE, PRESIDENCY University (2022 - 2026)',
+                'MPC, ABC High School (2020 - 2022)'
+              ]
+            },
+            {
+              title: 'Skills',
+              expanded: false,
+              items: [
+                'JavaScript, AngularJS, HTML5, CSS3',
+                'Python, Machine Learning',
+                'Git, Agile Methodologies'
+              ]
+            },
+            {
+              title: 'Experience',
+              expanded: false,
+              items: [
+                'FRESHER'
+              ]
+            }
+          ];
+
+          vm.toggleSection = function(section) {
+            section.expanded = !section.expanded;
+          };
+
+          vm.downloadPDF = function() {
+            alert('Download PDF functionality is not implemented in this demo.');
+          };
+        })
+
+        // Contact Controller
+        .controller('ContactController', function($timeout) {
+          var vm = this;
+          vm.formData = {};
+          vm.successMessage = '';
+
+          vm.submitForm = function() {
+            if (!vm.formData.name || !vm.formData.email || !vm.formData.message) {
+              return;
+            }
+            // Simulate form submission
+            vm.successMessage = 'Thank you, ' + vm.formData.name + '! Your message has been sent.';
+            vm.formData = {};
+            $timeout(function() {
+              vm.successMessage = '';
+            }, 5000);
+          };
+        });
+
+    })();
+  </script>
+
+</body>
+</html>
